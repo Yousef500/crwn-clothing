@@ -1,7 +1,6 @@
-import CategoryItem from "../category-item/category-item.component";
-import './categories.styles.scss'
-
-const Categories = () => {
+import { Outlet } from "react-router-dom";
+import Categories from "../../components/categories/categories.component";
+const Home = () => {
     const categories = [
         {
             id: 1,
@@ -31,12 +30,11 @@ const Categories = () => {
     ];
 
     return (
-        <div className="categories-container">
-            {categories.map(({ id, title, imageUrl }) => (
-                <CategoryItem key={id} title={title} imageUrl={imageUrl} />
-            ))}
-        </div>
+        <>
+            <Categories categories={categories} />
+            <Outlet />
+        </>
     );
 };
 
-export default Categories;
+export default Home;
