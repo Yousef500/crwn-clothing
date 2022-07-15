@@ -1,5 +1,4 @@
 import { createContext, useState } from "react";
-import shopData from "../shop-data.json";
 
 export const ProductsContext = createContext({
     products: [],
@@ -7,11 +6,7 @@ export const ProductsContext = createContext({
 });
 
 export const ProductsProvider = ({ children }) => {
-    const [products, setProducts] = useState(shopData);
-
-    // useEffect(() => {
-    //     setProducts(shopData);
-    // }, []);
+    const [products, setProducts] = useState([]);
 
     return (
         <ProductsContext.Provider value={{ products, setProducts }}>

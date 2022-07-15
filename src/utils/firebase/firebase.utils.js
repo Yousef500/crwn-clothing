@@ -9,7 +9,16 @@ import {
     signInWithPopup,
     signOut
 } from "firebase/auth";
-import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import {
+    collection,
+    doc,
+    getDoc,
+    getFirestore,
+    setDoc,
+    writeBatch,
+    query,
+    getDocs
+} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -34,7 +43,30 @@ googleProvider.setCustomParameters({
 export const auth = getAuth();
 export const signInWithGooglePopup = () =>
     signInWithPopup(auth, googleProvider);
+
 export const db = getFirestore();
+
+export const addCollectionAndDocuments = async (
+    collectionKey,
+    objectsToAdd
+) => {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+
+    objectsToAdd.forEach((obj) => {
+        const docRef = doc(collectionRef, obj.title.toLowerCase());
+        batch.set(docRef, obj);
+    });
+
+    await batch.commit();
+    console.log("done");
+};
+
+
+export const getCategoriesAndDocuments = async () => {
+    const collectionRef = collection(db, 'categories')
+}
+
 
 export const createUserDocumentFromAuth = async (userAuth) => {
     const userDocRef = doc(db, "users", userAuth.uid);
