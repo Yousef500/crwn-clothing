@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import {initializeApp} from "firebase/app";
 import {
     createUserWithEmailAndPassword,
     getAuth,
@@ -9,16 +9,7 @@ import {
     signInWithPopup,
     signOut
 } from "firebase/auth";
-import {
-    collection,
-    doc,
-    getDoc,
-    getFirestore,
-    setDoc,
-    writeBatch,
-    query,
-    getDocs
-} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, getFirestore, query, setDoc, writeBatch} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -65,6 +56,18 @@ export const addCollectionAndDocuments = async (
 
 export const getCategoriesAndDocuments = async () => {
     const collectionRef = collection(db, 'categories')
+
+    const q = query(collectionRef);
+
+    const qSnapshot = await getDocs(q);
+
+    const catMap = qSnapshot.docs.reduce((acc, doc) => {
+        const {title, items} = doc.data();
+        acc[title.toLowerCase()] = items;
+        return acc
+    }, {})
+
+    return catMap;
 }
 
 
@@ -76,7 +79,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
     const userSnapshot = await getDoc(userDocRef);
 
     if (!userSnapshot.exists()) {
-        const { displayName, email } = userAuth;
+        const {displayName, email} = userAuth;
         const createdAt = new Date();
 
         try {
@@ -86,7 +89,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
                 createdAt,
             });
         } catch (e) {
-            console.log({ e });
+            console.log({e});
         }
         return userDocRef;
     }
