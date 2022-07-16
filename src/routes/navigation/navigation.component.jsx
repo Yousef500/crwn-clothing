@@ -1,16 +1,21 @@
-import {useContext} from "react";
-import {Link, Outlet} from "react-router-dom";
-import {ReactComponent as CrwnLogo} from "../../assets/crown.svg";
+import { useContext } from "react";
+import { Outlet } from "react-router-dom";
+import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import CartDropDown from "../../components/cart-dropdown/cart-dropdown.component";
 import CartIcon from "../../components/cart-icon/cart-icon.component";
-import {CartContext} from "../../context/cart.context";
-import {UserContext} from "../../context/user.context";
-import {signOutUser} from "../../utils/firebase/firebase.utils";
-import {NavigationContainer} from "./navigation.styles.jsx";
+import { CartContext } from "../../context/cart.context";
+import { UserContext } from "../../context/user.context";
+import { signOutUser } from "../../utils/firebase/firebase.utils";
+import {
+    LogoContainer,
+    NavigationContainer,
+    NavLink,
+    NavLinksContainer
+} from "./navigation.styles.jsx";
 
 const Navigation = () => {
-    const {currentUser} = useContext(UserContext);
-    const {isCartOpen} = useContext(CartContext);
+    const { currentUser } = useContext(UserContext);
+    const { isCartOpen } = useContext(CartContext);
     const signOutHandler = async () => {
         await signOutUser();
     };
@@ -18,27 +23,23 @@ const Navigation = () => {
     return (
         <>
             <NavigationContainer>
-                <Link className="logo-container" to="/">
-                    <CrwnLogo className="logo"/>
-                </Link>
-                <div className="nav-links-container">
-                    <Link className="nav-link" to={"/shop"}>
-                        SHOP
-                    </Link>
+                <LogoContainer to="/">
+                    <CrwnLogo className="logo" />
+                </LogoContainer>
+                <NavLinksContainer>
+                    <NavLink to={"/shop"}>SHOP</NavLink>
                     {currentUser ? (
-                        <span onClick={signOutHandler} className="nav-link">
+                        <NavLink as="span" onClick={signOutHandler}>
                             SIGN OUT
-                        </span>
+                        </NavLink>
                     ) : (
-                        <Link className="nav-link" to={"/auth"}>
-                            SIGN IN
-                        </Link>
+                        <NavLink to={"/auth"}>SIGN IN</NavLink>
                     )}
-                    <CartIcon/>
-                </div>
-                {isCartOpen && <CartDropDown/>}
+                    <CartIcon />
+                </NavLinksContainer>
+                {isCartOpen && <CartDropDown />}
             </NavigationContainer>
-            <Outlet/>
+            <Outlet />
         </>
     );
 };
